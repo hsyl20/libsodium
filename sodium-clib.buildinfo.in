@@ -1,0 +1,3 @@
+cc-options: @CFLAGS@
+ld-options: @LDFLAGS@
+c-sources: @EXTRA_SOURCES@
