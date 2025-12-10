@@ -870,6 +870,48 @@ AS_IF([test "x$ENABLE_CWFLAGS" = "xyes"], [
   CFLAGS="$CFLAGS $CWFLAGS"
 ])
 
+EXTRA_SOURCES=""
+AS_IF([ test "x$HAVE_AMD64_ASM" = "xyes"], [
+  EXTRA_SOURCES="$EXTRA_SOURCES \
+        src/libsodium/crypto_stream/salsa20/xmm6/salsa20_xmm6-asm.S \
+	src/libsodium/crypto_stream/salsa20/xmm6/salsa20_xmm6.c"
+], [
+  EXTRA_SOURCES="$EXTRA_SOURCES src/libsodium/crypto_stream/salsa20/ref/salsa20_ref.c"
+])
+AS_IF([ test "x$HAVE_AVX_ASM" = "xyes"], [
+  EXTRA_SOURCES="$EXTRA_SOURCES \
+	src/libsodium/crypto_scalarmult/curve25519/sandy2x/curve25519_sandy2x.c \
+	src/libsodium/crypto_scalarmult/curve25519/sandy2x/fe51_invert.c \
+	src/libsodium/crypto_scalarmult/curve25519/sandy2x/fe_frombytes_sandy2x.c \
+	src/libsodium/crypto_scalarmult/curve25519/sandy2x/sandy2x.S"
+])
+AS_IF([ test "x$MINIMAL" = "xno"], [
+  EXTRA_SOURCES="$EXTRA_SOURCES \
+        src/libsodium/crypto_box/curve25519xchacha20poly1305/box_curve25519xchacha20poly1305.c \
+        src/libsodium/crypto_box/curve25519xchacha20poly1305/box_seal_curve25519xchacha20poly1305.c \
+        src/libsodium/crypto_core/ed25519/core_ed25519.c \
+        src/libsodium/crypto_core/ed25519/core_ristretto255.c \
+        src/libsodium/crypto_pwhash/scryptsalsa208sha256/crypto_scrypt-common.c \
+        src/libsodium/crypto_pwhash/scryptsalsa208sha256/crypto_scrypt.h \
+        src/libsodium/crypto_pwhash/scryptsalsa208sha256/scrypt_platform.c \
+        src/libsodium/crypto_pwhash/scryptsalsa208sha256/pbkdf2-sha256.c \
+        src/libsodium/crypto_pwhash/scryptsalsa208sha256/pwhash_scryptsalsa208sha256.c \
+        src/libsodium/crypto_pwhash/scryptsalsa208sha256/nosse/pwhash_scryptsalsa208sha256_nosse.c \
+        src/libsodium/crypto_scalarmult/ed25519/ref10/scalarmult_ed25519_ref10.c \
+        src/libsodium/crypto_scalarmult/ristretto255/ref10/scalarmult_ristretto255_ref10.c \
+        src/libsodium/crypto_secretbox/xchacha20poly1305/secretbox_xchacha20poly1305.c \
+        src/libsodium/crypto_shorthash/siphash24/shorthash_siphashx24.c \
+        src/libsodium/crypto_shorthash/siphash24/ref/shorthash_siphashx24_ref.c \
+        src/libsodium/crypto_sign/ed25519/ref10/obsolete.c \
+        src/libsodium/crypto_stream/salsa2012/ref/stream_salsa2012_ref.c \
+        src/libsodium/crypto_stream/salsa2012/stream_salsa2012.c \
+        src/libsodium/crypto_stream/salsa208/ref/stream_salsa208_ref.c \
+        src/libsodium/crypto_stream/salsa208/stream_salsa208.c \
+        src/libsodium/crypto_stream/xchacha20/stream_xchacha20.c"
+])
+
+AC_SUBST(EXTRA_SOURCES)
+
 AC_CONFIG_FILES([Makefile
                  builds/Makefile
                  contrib/Makefile
@@ -883,5 +925,6 @@ AC_CONFIG_FILES([Makefile
                  src/libsodium/include/sodium/version.h
                  test/default/Makefile
                  test/Makefile
+                 sodium-clib.buildinfo
                  ])
 AC_OUTPUT
