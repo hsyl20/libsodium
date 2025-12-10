@@ -911,19 +911,7 @@ AS_IF([ test "x$enable_minimal" = "xno"], [
 
 AC_SUBST(EXTRA_SOURCES)
 
-AC_CONFIG_FILES([Makefile
-                 builds/Makefile
-                 contrib/Makefile
-                 dist-build/Makefile
-                 libsodium.pc
-                 libsodium-uninstalled.pc
-                 msvc-scripts/Makefile
-                 src/Makefile
-                 src/libsodium/Makefile
-                 src/libsodium/include/Makefile
-                 src/libsodium/include/sodium/version.h
-                 test/default/Makefile
-                 test/Makefile
+AC_CONFIG_FILES([src/libsodium/include/sodium/version.h
                  sodium-clib.buildinfo
                  ])
 AC_OUTPUT

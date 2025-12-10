@@ -1,6 +1,6 @@
 cabal-version: 3.0
 name:          sodium-clib
-version:       0.3.16
+version:       1.0.18
 synopsis:      Sodium is an easy-to-use software library that provides a wide range of cryptographic operations including encryption, decryption, digital signatures, and secure password hashing.
 description:   libsodium. See [libsodium](https://github.com/jedisct1/libsodium)
 category:      Cryptography
@@ -10,7 +10,14 @@ build-type:    Configure
 
 extra-source-files:
   configure
+  build-aux/config.guess
+  build-aux/config.sub
+  build-aux/install-sh
+  build-aux/ltmain.sh
+  build-aux/compile
+  build-aux/missing
   sodium-clib.buildinfo.in
+  src/libsodium/include/sodium/version.h.in
   src/libsodium/crypto_generichash/blake2b/ref/blake2.h
   src/libsodium/crypto_core/ed25519/core_h2c.h
   src/libsodium/crypto_generichash/blake2b/ref/blake2b-load-sse2.h
