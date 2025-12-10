@@ -871,28 +871,27 @@ AS_IF([test "x$ENABLE_CWFLAGS" = "xyes"], [
 ])
 
 EXTRA_SOURCES=""
-AS_IF([ test "x$HAVE_AMD64_ASM" = "xyes"], [
+AS_IF([ test "x$HAVE_AMD64_ASM_V" = 1], [
   EXTRA_SOURCES="$EXTRA_SOURCES \
         src/libsodium/crypto_stream/salsa20/xmm6/salsa20_xmm6-asm.S \
 	src/libsodium/crypto_stream/salsa20/xmm6/salsa20_xmm6.c"
 ], [
   EXTRA_SOURCES="$EXTRA_SOURCES src/libsodium/crypto_stream/salsa20/ref/salsa20_ref.c"
 ])
-AS_IF([ test "x$HAVE_AVX_ASM" = "xyes"], [
+AS_IF([ test "x$HAVE_AVX_ASM_V" = 1], [
   EXTRA_SOURCES="$EXTRA_SOURCES \
 	src/libsodium/crypto_scalarmult/curve25519/sandy2x/curve25519_sandy2x.c \
 	src/libsodium/crypto_scalarmult/curve25519/sandy2x/fe51_invert.c \
 	src/libsodium/crypto_scalarmult/curve25519/sandy2x/fe_frombytes_sandy2x.c \
 	src/libsodium/crypto_scalarmult/curve25519/sandy2x/sandy2x.S"
 ])
-AS_IF([ test "x$MINIMAL" = "xno"], [
+AS_IF([ test "x$enable_minimal" = "xno"], [
   EXTRA_SOURCES="$EXTRA_SOURCES \
         src/libsodium/crypto_box/curve25519xchacha20poly1305/box_curve25519xchacha20poly1305.c \
         src/libsodium/crypto_box/curve25519xchacha20poly1305/box_seal_curve25519xchacha20poly1305.c \
         src/libsodium/crypto_core/ed25519/core_ed25519.c \
         src/libsodium/crypto_core/ed25519/core_ristretto255.c \
         src/libsodium/crypto_pwhash/scryptsalsa208sha256/crypto_scrypt-common.c \
-        src/libsodium/crypto_pwhash/scryptsalsa208sha256/crypto_scrypt.h \
         src/libsodium/crypto_pwhash/scryptsalsa208sha256/scrypt_platform.c \
         src/libsodium/crypto_pwhash/scryptsalsa208sha256/pbkdf2-sha256.c \
         src/libsodium/crypto_pwhash/scryptsalsa208sha256/pwhash_scryptsalsa208sha256.c \
