@@ -9,4 +9,5 @@ cabal sdist
 cd test_dir
 tar xf ../dist-newstyle/sdist/sodium-clib-1.0.18.tar.gz
 cd sodium-clib-1.0.18
-cabal build
+cabal test --configure-option=--enable-pie=no
+
