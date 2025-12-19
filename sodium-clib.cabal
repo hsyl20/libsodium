@@ -184,6 +184,9 @@ library
       src/libsodium/include/
       src/libsodium/include/sodium
 
+    autogen-includes:
+      sodium/version.h
+
     install-includes:
       sodium.h
       sodium/core.h
@@ -250,6 +253,7 @@ library
       sodium/randombytes_sysrandom.h
       sodium/runtime.h
       sodium/utils.h
+      sodium/version.h
 
     -- TODO: other libraries: libaesni, libsse2, libssse3, libsse41, libavx2, libavx512f, librdrand
 
