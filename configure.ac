@@ -988,7 +988,7 @@ AS_IF([test "x$ENABLE_CWFLAGS" = "xyes"], [
   CFLAGS="$CFLAGS $CWFLAGS"
 ])
 
-dnl Adapted from Makefile.am
+dnl Adapted from src/libsodium/Makefile.am
 dnl We only keep conditional .c and .S files.
 
 EXTRA_SOURCES=""

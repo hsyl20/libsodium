@@ -19,6 +19,12 @@ extra-source-files:
   sodium-clib.buildinfo.in
   src/libsodium/include/sodium/version.h.in
   -- all the .h files mentioned in Makefile.am
+  src/libsodium/crypto_aead/aegis128l/aegis128l_common.h
+  src/libsodium/crypto_aead/aegis128l/aegis128l_soft.h
+  src/libsodium/crypto_aead/aegis128l/implementations.h
+  src/libsodium/crypto_aead/aegis256/aegis256_common.h
+  src/libsodium/crypto_aead/aegis256/aegis256_soft.h
+  src/libsodium/crypto_aead/aegis256/implementations.h
   src/libsodium/crypto_generichash/blake2b/ref/blake2.h
   src/libsodium/crypto_generichash/blake2b/ref/blake2b-load-sse2.h
   src/libsodium/crypto_generichash/blake2b/ref/blake2b-load-sse41.h
@@ -45,6 +51,7 @@ extra-source-files:
   src/libsodium/include/sodium/private/implementations.h
   src/libsodium/include/sodium/private/mutex.h
   src/libsodium/include/sodium/private/sse2_64_32.h
+  src/libsodium/include/sodium/private/softaes.h
   src/libsodium/crypto_core/ed25519/ref10/fe_51/base.h
   src/libsodium/crypto_core/ed25519/ref10/fe_51/base2.h
   src/libsodium/crypto_core/ed25519/ref10/fe_51/constants.h
@@ -99,10 +106,87 @@ extra-source-files:
 library
     default-language: Haskell2010
 
-    cc-options: -DCONFIGURED
+    cc-options:
+      -DCONFIGURED=1 -D_GNU_SOURCE=1 -DDEV_MODE=1 -DHAVE_ATOMIC_OPS=1
+      -DHAVE_C11_MEMORY_FENCES=1 -DHAVE_CET_H -DHAVE_GCC_MEMORY_FENCES=1
+      -DHAVE_INLINE_ASM -DHAVE_INTTYPES_H -DHAVE_STDINT_H -DHAVE_TI_MODE=1
+
+    if os(linux)
+      cc-options:
+        -DASM_HIDE_SYMBOL=.hidden
+        -DTLS=_Thread_local
+        -DHAVE_CATCHABLE_ABRT=1
+        -DHAVE_CATCHABLE_SEGV=1
+        -DHAVE_CLOCK_GETTIME=1
+        -DHAVE_GETPID=1
+        -DHAVE_MADVISE=1
+        -DHAVE_MLOCK=1
+        -DHAVE_MMAP=1
+        -DHAVE_MPROTECT=1
+        -DHAVE_NANOSLEEP=1
+        -DHAVE_POSIX_MEMALIGN=1
+        -DHAVE_PTHREAD_PRIO_INHERIT=1
+        -DHAVE_PTHREAD=1
+        -DHAVE_RAISE=1
+        -DHAVE_SYSCONF=1
+        -DHAVE_SYS_AUXV_H=1
+        -DHAVE_SYS_MMAN_H=1
+        -DHAVE_SYS_PARAM_H=1
+        -DHAVE_SYS_RANDOM_H=1
+        -DHAVE_WEAK_SYMBOLS=1
+      
+    if os(windows)
+      cc-options:
+        -DHAVE_RAISE=1
+        -DHAVE_SYS_PARAM_H=1
+        -- FIXME: if static, -DSODIUM_STATIC=1
+
+    if os(macos)
+      cc-options:
+        -DASM_HIDE_SYMBOL=.private_extern
+        -DTLS=_Thread_local
+        -DHAVE_ARC4RANDOM=1
+        -DHAVE_ARC4RANDOM_BUF=1
+        -DHAVE_CATCHABLE_ABRT=1
+        -DHAVE_CATCHABLE_SEGV=1
+        -DHAVE_CLOCK_GETTIME=1
+        -DHAVE_GETENTROPY=1
+        -DHAVE_GETPID=1
+        -DHAVE_MADVISE=1
+        -DHAVE_MEMSET_S=1
+        -DHAVE_MLOCK=1
+        -DHAVE_MMAP=1
+        -DHAVE_MPROTECT=1
+        -DHAVE_NANOSLEEP=1
+        -DHAVE_POSIX_MEMALIGN=1
+        -DHAVE_PTHREAD=1
+        -DHAVE_PTHREAD_PRIO_INHERIT=1
+        -DHAVE_RAISE=1
+        -DHAVE_SYSCONF=1
+        -DHAVE_SYS_MMAN_H=1
+        -DHAVE_SYS_PARAM_H=1
+        -DHAVE_SYS_RANDOM_H=1
+        -DHAVE_WEAK_SYMBOLS=1
+
+    if os(wasi)
+      cc-options:
+        -DHAVE_ARC4RANDOM=1
+        -DHAVE_ARC4RANDOM_BUF=1
+        -DHAVE_CLOCK_GETTIME=1
+        -DHAVE_GETENTROPY=1
+        -DHAVE_NANOSLEEP=1
+        -DHAVE_POSIX_MEMALIGN=1
+        -DHAVE_SYS_AUXV_H=1
+        -DHAVE_SYS_PARAM_H=1
+        -DHAVE_SYS_RANDOM_H=1
 
     c-sources:
-      -- all the unconditional .c files from Makefile.am
+      -- all the unconditional .c files from src/libsodium/Makefile.am
+      src/libsodium/crypto_aead/aegis128l/aead_aegis128l.c
+      src/libsodium/crypto_aead/aegis128l/aegis128l_soft.c
+      src/libsodium/crypto_aead/aegis256/aead_aegis256.c
+      src/libsodium/crypto_aead/aegis256/aegis256_soft.c
+      src/libsodium/crypto_aead/aes256gcm/aead_aes256gcm.c
       src/libsodium/crypto_aead/chacha20poly1305/aead_chacha20poly1305.c
       src/libsodium/crypto_aead/xchacha20poly1305/aead_xchacha20poly1305.c
       src/libsodium/crypto_auth/crypto_auth.c
@@ -118,6 +202,7 @@ library
       src/libsodium/crypto_core/hsalsa20/ref2/core_hsalsa20_ref2.c
       src/libsodium/crypto_core/hsalsa20/core_hsalsa20.c
       src/libsodium/crypto_core/salsa/ref/core_salsa_ref.c
+      src/libsodium/crypto_core/softaes/softaes.c
       src/libsodium/crypto_generichash/crypto_generichash.c
       src/libsodium/crypto_generichash/blake2b/generichash_blake2.c
       src/libsodium/crypto_generichash/blake2b/ref/blake2b-compress-ref.c
@@ -178,10 +263,13 @@ library
     autogen-includes:
       sodium/version.h
 
+    -- SODIUM_EXPORT in src/libsodium/include/Makefile.am
     install-includes:
       sodium.h
       sodium/core.h
       sodium/crypto_aead_aes256gcm.h
+      sodium/crypto_aead_aegis128l.h
+      sodium/crypto_aead_aegis256.h
       sodium/crypto_aead_chacha20poly1305.h
       sodium/crypto_aead_xchacha20poly1305.h
       sodium/crypto_auth.h
